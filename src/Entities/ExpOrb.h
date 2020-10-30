@@ -8,18 +8,18 @@
 
 
 // tolua_begin
-class cExpOrb :
+class cExpOrb:
 	public cEntity
 {
-	typedef cEntity super;
-
-public:
 	// tolua_end
+
+	using Super = cEntity;
+
+public:  // tolua_export
 
 	CLASS_PROTODEF(cExpOrb)
 
-	cExpOrb(double a_X, double a_Y, double a_Z, int a_Reward);
-	cExpOrb(const Vector3d & a_Pos, int a_Reward);
+	cExpOrb(Vector3d a_Pos, int a_Reward);
 
 	// Override functions
 	virtual void Tick(std::chrono::milliseconds a_Dt, cChunk & a_Chunk) override;

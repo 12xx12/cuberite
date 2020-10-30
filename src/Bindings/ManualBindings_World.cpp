@@ -39,10 +39,8 @@ static bool CheckParamVectorOr3Numbers(cLuaState & L, const char * a_VectorName,
 template <typename T>
 static bool GetStackVectorOr3Numbers(cLuaState & L, int a_Index, Vector3<T> & a_Return)
 {
-	Vector3<T> * UserType;
-	if (L.GetStackValue(a_Index, UserType))
+	if (L.GetStackValue(a_Index, a_Return))
 	{
-		a_Return = *UserType;
 		return true;
 	}
 	return L.GetStackValues(a_Index, a_Return.x, a_Return.y, a_Return.z);
@@ -309,7 +307,7 @@ static int tolua_cWorld_ChunkStay(lua_State * tolua_S)
 	ASSERT(chunkCoords != nullptr);  // If the table was invalid, GetStackValues() would have failed
 
 	// Read the chunk coords:
-	auto chunkStay = cpp14::make_unique<cLuaChunkStay>();
+	auto chunkStay = std::make_unique<cLuaChunkStay>();
 	if (!chunkStay->AddChunks(*chunkCoords))
 	{
 		return 0;
@@ -367,10 +365,10 @@ static int tolua_cWorld_DoExplosionAt(lua_State * tolua_S)
 		case esBed:
 		{
 			// esBed receives a Vector3i SourceData param:
-			Vector3i * pos = nullptr;
+			Vector3i pos;
 			L.GetStackValue(8, pos);
 			SourceType = esBed;
-			SourceData = pos;
+			SourceData = &pos;
 			break;
 		}
 
@@ -481,7 +479,7 @@ static int tolua_cWorld_DoWithNearestPlayer(lua_State * tolua_S)
 
 	// Get parameters:
 	cWorld * Self;
-	Vector3d * Position;
+	Vector3d Position;
 	double RangeLimit;
 	cLuaState::cRef FnRef;
 	bool CheckLineOfSight = true, IgnoreSpectators = true;  // Defaults for the optional params
@@ -493,7 +491,7 @@ static int tolua_cWorld_DoWithNearestPlayer(lua_State * tolua_S)
 	}
 
 	// Call the function:
-	bool res = Self->DoWithNearestPlayer(*Position, RangeLimit, [&](cPlayer & a_Player)
+	bool res = Self->DoWithNearestPlayer(Position, RangeLimit, [&](cPlayer & a_Player)
 	{
 		bool ret = false;
 		L.Call(FnRef, &a_Player, cLuaState::Return, ret);
@@ -722,9 +720,9 @@ static int tolua_cWorld_PrepareChunk(lua_State * tolua_S)
 	{
 	public:
 		// cChunkCoordCallback override:
-		virtual void Call(int a_CBChunkX, int a_CBChunkZ, bool a_IsSuccess) override
+		virtual void Call(cChunkCoords a_Coords, bool a_IsSuccess) override
 		{
-			m_LuaCallback.Call(a_CBChunkX, a_CBChunkZ, a_IsSuccess);
+			m_LuaCallback.Call(a_Coords.m_ChunkX, a_Coords.m_ChunkZ, a_IsSuccess);
 		}
 
 		cLuaState::cOptionalCallback m_LuaCallback;
@@ -734,7 +732,7 @@ static int tolua_cWorld_PrepareChunk(lua_State * tolua_S)
 	cWorld * world = nullptr;
 	int chunkX = 0;
 	int chunkZ = 0;
-	auto Callback = cpp14::make_unique<cCallback>();
+	auto Callback = std::make_unique<cCallback>();
 	L.GetStackValues(1, world, chunkX, chunkZ, Callback->m_LuaCallback);
 	if (world == nullptr)
 	{
@@ -890,7 +888,7 @@ static int tolua_cWorld_SpawnSplitExperienceOrbs(lua_State* tolua_S)
 	}
 
 	cWorld * self = nullptr;
-	Vector3d * Position;
+	Vector3d Position;
 	int Reward;
 	L.GetStackValues(1, self, Position, Reward);
 	if (self == nullptr)
@@ -900,7 +898,7 @@ static int tolua_cWorld_SpawnSplitExperienceOrbs(lua_State* tolua_S)
 	}
 
 	// Execute and push result:
-	L.Push(self->SpawnExperienceOrb(Position->x, Position->y, Position->z, Reward));
+	L.Push(self->SpawnExperienceOrb(Position, Reward));
 	return 1;
 }
 
@@ -974,6 +972,7 @@ void cManualBindings::BindWorld(lua_State * tolua_S)
 			tolua_function(tolua_S, "DoWithEntityByID",             DoWithID< cWorld, cEntity,             &cWorld::DoWithEntityByID>);
 			tolua_function(tolua_S, "DoWithFlowerPotAt",            DoWithXYZ<cWorld, cFlowerPotEntity,    &cWorld::DoWithFlowerPotAt>);
 			tolua_function(tolua_S, "DoWithFurnaceAt",              DoWithXYZ<cWorld, cFurnaceEntity,      &cWorld::DoWithFurnaceAt>);
+			tolua_function(tolua_S, "DoWithHopperAt",               DoWithXYZ<cWorld, cHopperEntity,       &cWorld::DoWithHopperAt>);
 			tolua_function(tolua_S, "DoWithMobHeadAt",              DoWithXYZ<cWorld, cMobHeadEntity,      &cWorld::DoWithMobHeadAt>);
 			tolua_function(tolua_S, "DoWithNearestPlayer",          tolua_cWorld_DoWithNearestPlayer);
 			tolua_function(tolua_S, "DoWithNoteBlockAt",            DoWithXYZ<cWorld, cNoteEntity,         &cWorld::DoWithNoteBlockAt>);
