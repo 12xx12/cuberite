@@ -223,10 +223,13 @@ public:
 	CLASS_PROTODEF(cMinecartWithTNT)
 
 	cMinecartWithTNT(Vector3d a_Pos);
+	virtual void Tick(std::chrono::milliseconds a_Dt, cChunk & a_Chunk) override;
 
 private:
 
 	virtual void GetDrops(cItems & a_Drops, cEntity * a_Killer = nullptr) override;
+
+	int m_IgniteTimer = -1;
 } ;
 
 

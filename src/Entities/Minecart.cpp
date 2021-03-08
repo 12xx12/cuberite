@@ -13,6 +13,7 @@
 #include "Player.h"
 #include "../BoundingBox.h"
 #include "../UI/MinecartWithChestWindow.h"
+#include "../Simulator/IncrementalRedstoneSimulator/RedstoneSimulatorChunkData.h"
 
 #define NO_SPEED 0.0
 #define MAX_SPEED 8
@@ -1482,9 +1483,40 @@ cMinecartWithTNT::cMinecartWithTNT(Vector3d a_Pos):
 {
 }
 
-// TODO: Make it activate when passing over activator rail
 
 
+
+void cMinecartWithTNT::Tick(std::chrono::milliseconds a_Dt, cChunk &a_Chunk)
+{
+	Super::Tick(a_Dt, a_Chunk);
+
+	if (m_IgniteTimer >= 0)
+	{
+		m_IgniteTimer--;
+		if (m_IgniteTimer < 0)
+		{
+			LOGWARNING("Boom");
+			Destroy();
+			LOGWARNING("%f, %f, %f", GetPosition().x, GetPosition().y, GetPosition().z);
+			m_World->DoExplosionAt(4.0, GetPosition().x, GetPosition().y, GetPosition().z, false, eExplosionSource::esPrimedTNT, this);
+			m_IgniteTimer = -1;
+		}
+		return;
+	}
+
+	if (a_Chunk.GetBlock(cChunkDef::AbsoluteToRelative(GetPosition())) != E_BLOCK_ACTIVATOR_RAIL)
+	{
+		return;
+	}
+
+	const auto RedstoneData = static_cast<const cIncrementalRedstoneSimulatorChunkData *>(a_Chunk.GetRedstoneSimulatorData());
+	auto RedstoneValue = RedstoneData->GetCachedPowerData(cChunkDef::AbsoluteToRelative(GetPosition()));
+
+	if (RedstoneValue > 0)
+	{
+		m_IgniteTimer = TPS * 4;
+	}
+}
 
 
 
