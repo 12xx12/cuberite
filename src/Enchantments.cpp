@@ -85,7 +85,7 @@ void cEnchantments::AddFromString(const AString & a_StringSpec)
 
 
 
-size_t cEnchantments::Count(void)
+size_t cEnchantments::Count(void) const
 {
 	return m_Enchantments.size();
 }
@@ -400,7 +400,7 @@ bool cEnchantments::operator !=(const cEnchantments & a_Other) const
 
 
 
-void cEnchantments::AddItemEnchantmentWeights(cWeightedEnchantments & a_Enchantments, short a_ItemType, int a_EnchantmentLevel)
+void cEnchantments::AddItemEnchantmentWeights(cWeightedEnchantments & a_Enchantments, short a_ItemType, unsigned a_EnchantmentLevel)
 {
 	if (ItemCategory::IsSword(a_ItemType))
 	{

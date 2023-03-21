@@ -9,6 +9,7 @@ target_sources(
 
 	BlockAir.h
 	BlockAnvil.h
+	BlockBanner.h
 	BlockBed.h
 	BlockBigFlower.h
 	BlockBookShelf.h
@@ -26,13 +27,14 @@ target_sources(
 	BlockComparator.h
 	BlockConcretePowder.h
 	BlockCrops.h
+	BlockDaylightSensor.h
 	BlockDeadBush.h
 	BlockDefaultBlock.h
 	BlockDirt.h
 	BlockDoor.h
 	BlockDropSpenser.h
 	BlockEnchantingTable.h
-	BlockEnderchest.h
+	BlockEnderChest.h
 	BlockEndPortalFrame.h
 	BlockEntity.h
 	BlockFarmland.h
@@ -50,6 +52,7 @@ target_sources(
 	BlockGravel.h
 	BlockHandler.h
 	BlockHopper.h
+	BlockHugeMushroom.h
 	BlockIce.h
 	BlockJukebox.h
 	BlockLadder.h
@@ -59,10 +62,12 @@ target_sources(
 	BlockMelon.h
 	BlockMobHead.h
 	BlockMobSpawner.h
+	BlockInfested.h
 	BlockMushroom.h
 	BlockMycelium.h
 	BlockNetherrack.h
 	BlockNetherWart.h
+	BlockNoteBlock.h
 	BlockObserver.h
 	BlockOre.h
 	BlockPackedIce.h
@@ -75,7 +80,7 @@ target_sources(
 	BlockPumpkin.h
 	BlockQuartz.h
 	BlockRail.h
-	BlockRedstone.h
+	BlockRedstoneWire.h
 	BlockRedstoneLamp.h
 	BlockRedstoneOre.h
 	BlockRedstoneRepeater.h
@@ -91,14 +96,14 @@ target_sources(
 	BlockStairs.h
 	BlockStems.h
 	BlockStone.h
-	BlockSugarcane.h
+	BlockSugarCane.h
 	BlockTNT.h
 	BlockTallGrass.h
 	BlockTorch.h
 	BlockTrapdoor.h
 	BlockTripwire.h
 	BlockTripwireHook.h
-	BlockVine.h
+	BlockVines.h
 	BlockWallSign.h
 	BlockWorkbench.h
 	BroadcastInterface.h

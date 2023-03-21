@@ -88,7 +88,7 @@ public:
 	void AddFromString(const AString & a_StringSpec);
 
 	/** Get the count of enchantments */
-	size_t Count(void);
+	size_t Count(void) const;
 
 	/** Serializes all the enchantments into a string */
 	AString ToString(void) const;
@@ -126,7 +126,7 @@ public:
 	static unsigned int GetLevelCap(int a_EnchantmentID);
 
 	/** Add enchantment weights from item to the vector */
-	static void AddItemEnchantmentWeights(cWeightedEnchantments & a_Enchantments, short a_ItemType, int a_EnchantmentLevel);
+	static void AddItemEnchantmentWeights(cWeightedEnchantments & a_Enchantments, short a_ItemType, unsigned a_EnchantmentLevel);
 
 	/** Add a enchantment with weight to the vector */
 	static void AddEnchantmentWeightToVector(cWeightedEnchantments & a_Enchantments, int a_Weight, int a_EnchantmentID, unsigned int a_EnchantmentLevel);

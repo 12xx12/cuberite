@@ -327,6 +327,21 @@ return
 				},
 				Notes = "Spawns the specified particles to all players in the world exept the optional ExeptClient. A list of available particles by thinkofdeath can be found {{https://gist.github.com/thinkofdeath/5110835|Here}}",
 			},
+			BroadcastPlayerListHeaderFooter =
+			{
+				Params =
+				{
+					{
+						Type = "cCompositeChat",
+						Name = "Header",
+					},
+					{
+						Type = "cCompositeChat",
+						Name = "Footer",
+					},
+				},
+				Desc = "Broadcasts the header and footer of the player list to all players in the world.",
+			},
 			BroadcastSoundEffect =
 			{
 				Params =
@@ -541,28 +556,56 @@ function OnAllChunksAvailable()</pre> All return values from the callbacks are i
 			},
 			DigBlock =
 			{
-				Params =
 				{
+					Params =
 					{
-						Name = "X",
-						Type = "number",
+						{
+							Name = "X",
+							Type = "number",
+						},
+						{
+							Name = "Y",
+							Type = "number",
+						},
+						{
+							Name = "Z",
+							Type = "number",
+						},
+						{
+							Name = "Digger",
+							Type = "cEntity",
+							IsOptional = true,
+						},
 					},
+					Returns =
 					{
-						Name = "Y",
-						Type = "number",
+						{
+							Type = "boolean",
+						},
 					},
-					{
-						Name = "Z",
-						Type = "number",
-					},
+					Notes = "Replaces the specified block with air, without dropping the usual pickups for the block. Wakes up the simulators for the block and its neighbors. The optional Digger parameter specifies the entity who dug the block, usually a player. Returns true on success, or false if the chunk is not loaded or invalid coords. See also DropBlockAsPickups() for the version that drops pickups.",
 				},
-				Returns =
 				{
+					Params =
 					{
-						Type = "boolean",
+						{
+							Name = "BlockPos",
+							Type = "Vector3i",
+						},
+						{
+							Name = "Digger",
+							Type = "cEntity",
+							IsOptional = true,
+						},
 					},
+					Returns =
+					{
+						{
+							Type = "boolean",
+						},
+					},
+					Notes = "Replaces the specified block with air, without dropping the usual pickups for the block. Wakes up the simulators for the block and its neighbors. The optional Digger parameter specifies the entity who dug the block, usually a player. Returns true on success, or false if the chunk is not loaded or invalid coords. See also DropBlockAsPickups() for the version that drops pickups.",
 				},
-				Notes = "Replaces the specified block with air, without dropping the usual pickups for the block. Wakes up the simulators for the block and its neighbors. Returns true on success, or false if the chunk is not loaded or invalid coords. See also DropBlockAsPickups() for the version that drops pickups.",
 			},
 			DoExplosionAt =
 			{
@@ -1155,7 +1198,7 @@ function OnAllChunksAvailable()</pre> All return values from the callbacks are i
 							Type = "number",
 						},
 					},
-					Notes = "Sets the block at the specified coords, without waking up the simulators or replacing the block entities for the previous block type. Do not use if the block being replaced has a block entity tied to it!",
+					Notes = "Sets the block at the specified coords, without waking up the simulators or replacing the block entities for the previous block type. Do not use if the block being replaced has a block entity tied to it! <b>OBSOLETE</b>, use the vector-based overload instead.",
 				},
 				{
 					Params =
@@ -1456,7 +1499,7 @@ function OnAllChunksAvailable()</pre> All return values from the callbacks are i
 							Type = "number",
 						},
 					},
-					Notes = "Returns the block type of the block at the specified coords, or 0 if the appropriate chunk is not loaded.",
+					Notes = "Returns the block type of the block at the specified coords, or 0 if the appropriate chunk is not loaded. <b>OBSOLETE</b>, use the vector-based overload instead.",
 				},
 				{
 					Params =
@@ -1500,7 +1543,7 @@ function OnAllChunksAvailable()</pre> All return values from the callbacks are i
 							Type = "number",
 						},
 					},
-					Notes = "Returns the amount of block light at the specified coords, or 0 if the appropriate chunk is not loaded.",
+					Notes = "Returns the amount of block light at the specified coords, or 0 if the appropriate chunk is not loaded. <b>OBSOLETE</b>, use the vector-based overload instead.",
 				},
 				{
 					Params =
@@ -1585,7 +1628,7 @@ function OnAllChunksAvailable()</pre> All return values from the callbacks are i
 							Type = "number",
 						},
 					},
-					Notes = "Returns the block metadata of the block at the specified coords, or 0 if the appropriate chunk is not loaded.",
+					Notes = "Returns the block metadata of the block at the specified coords, or 0 if the appropriate chunk is not loaded. <b>OBSOLETE</b>, use the vector-based overload instead.",
 				},
 				{
 					Params =
@@ -2068,64 +2111,6 @@ function OnAllChunksAvailable()</pre> All return values from the callbacks are i
 				},
 				Notes = "Returns the total age of the world, in ticks. The age always grows, cannot be set by plugins and is unrelated to TimeOfDay.",
 			},
-			GrowCactus =
-			{
-				Params =
-				{
-					{
-						Name = "BlockX",
-						Type = "number",
-					},
-					{
-						Name = "BlockY",
-						Type = "number",
-					},
-					{
-						Name = "BlockZ",
-						Type = "number",
-					},
-					{
-						Name = "NumBlocksToGrow",
-						Type = "number",
-					},
-				},
-				Returns =
-				{
-					{
-						Type = "number",
-					},
-				},
-				Notes = "OBSOLETE, use GrowPlantAt instead. Grows a cactus block at the specified coords, by up to the specified number of blocks. Adheres to the world's maximum cactus growth (GetMaxCactusHeight()). Returns the amount of blocks the cactus grew inside this call.",
-			},
-			GrowMelonPumpkin =
-			{
-				Params =
-				{
-					{
-						Name = "BlockX",
-						Type = "number",
-					},
-					{
-						Name = "BlockY",
-						Type = "number",
-					},
-					{
-						Name = "BlockZ",
-						Type = "number",
-					},
-					{
-						Name = "StemBlockType",
-						Type = "number",
-					},
-				},
-				Returns =
-				{
-					{
-						Type = "boolean",
-					},
-				},
-				Notes = "OBSOLETE, use GrowPlantAt instead. Grows a melon or pumpkin, based on the stem block type specified (assumed to be at the coords provided). Checks for normal melon / pumpkin growth conditions - stem not having another produce next to it and suitable ground below. Returns true if the melon or pumpkin grew successfully.",
-			},
 			GrowPlantAt =
 			{
 				Params =
@@ -2149,75 +2134,20 @@ function OnAllChunksAvailable()</pre> All return values from the callbacks are i
 			},
 			GrowRipePlant =
 			{
-				{
-					Params =
-					{
-						{
-							Name = "BlockX",
-							Type = "number",
-						},
-						{
-							Name = "BlockY",
-							Type = "number",
-						},
-						{
-							Name = "BlockZ",
-							Type = "number",
-						},
-					},
-					Returns =
-					{
-						{
-							Type = "boolean",
-						},
-					},
-					Notes = "OBSOLETE, use the Vector3-based overload instead. Grows the plant at the specified coords to its full. Returns true if the plant was grown, false if not.",
-				},
-				{
-					Params =
-					{
-						{
-							Name = "BlockPos",
-							Type = "Vector3i",
-						},
-					},
-					Returns =
-					{
-						{
-							Type = "boolean",
-						},
-					},
-					Notes = "Grows the plant at the specified coords to its full. Returns true if the plant was grown, false if not.",
-				},
-			},
-			GrowSugarcane =
-			{
 				Params =
 				{
 					{
-						Name = "BlockX",
-						Type = "number",
-					},
-					{
-						Name = "BlockY",
-						Type = "number",
-					},
-					{
-						Name = "BlockZ",
-						Type = "number",
-					},
-					{
-						Name = "NumBlocksToGrow",
-						Type = "number",
+						Name = "BlockPos",
+						Type = "Vector3i",
 					},
 				},
 				Returns =
 				{
 					{
-						Type = "number",
+						Type = "boolean",
 					},
 				},
-				Notes = "OBSOLETE, use GrowPlantAt instead. Grows a sugarcane block at the specified coords, by up to the specified number of blocks. Adheres to the world's maximum sugarcane growth (GetMaxSugarcaneHeight()). Returns the amount of blocks the sugarcane grew inside this call.",
+				Notes = "Grows the plant at the specified coords to maturity. Returns true if the plant was grown, false if not.",
 			},
 			GrowTree =
 			{
@@ -2228,7 +2158,13 @@ function OnAllChunksAvailable()</pre> All return values from the callbacks are i
 						Type = "Vector3i",
 					},
 				},
-				Notes = "Grows a tree based at the specified coords. If there is a sapling there, grows the tree based on that sapling, otherwise chooses a tree image based on the biome.",
+				Returns =
+				{
+					{
+						Type = "boolean",
+					},
+				},
+				Notes = "Grows a tree based at the specified coords. If there is a sapling there, grows the tree based on that sapling, otherwise chooses a tree image based on the biome. Returns true if the tree was grown, false if not (invalid chunk, insufficient space)",
 			},
 			GrowTreeByBiome =
 			{
@@ -2239,7 +2175,13 @@ function OnAllChunksAvailable()</pre> All return values from the callbacks are i
 						Type = "Vector3i",
 					},
 				},
-				Notes = "Grows a tree based at the specified coords. The tree type is picked from types available for the biome at those coords.",
+				Returns =
+				{
+					{
+						Type = "boolean",
+					},
+				},
+				Notes = "Grows a tree based at the specified coords. The tree type is picked from types available for the biome at those coords. Returns true if the tree was grown, false if not (invalid chunk, insufficient space)",
 			},
 			GrowTreeFromSapling =
 			{
@@ -2250,7 +2192,13 @@ function OnAllChunksAvailable()</pre> All return values from the callbacks are i
 						Type = "Vector3i",
 					},
 				},
-				Notes = "Grows a tree based at the specified coords. The tree type is determined from the sapling meta. If the sapling is part of a 2x2 sapling area, grows a large tree.",
+				Returns =
+				{
+					{
+						Type = "boolean",
+					},
+				},
+				Notes = "Grows a tree based at the specified coords. The tree type is determined from the sapling meta. If the sapling is part of a 2x2 sapling area, grows a large tree. Returns true if the tree was grown, false if not (invalid chunk, insufficient space)",
 			},
 			IsBlockDirectlyWatered =
 			{
@@ -2296,6 +2244,16 @@ function OnAllChunksAvailable()</pre> All return values from the callbacks are i
 					},
 				},
 				Notes = "Returns whether the configuration has DeepSnow enabled.",
+			},
+			IsFarmlandTramplingEnabled =
+			{
+				Returns =
+				{
+					{
+						Type = "boolean",
+					},
+				},
+				Notes = "Returns true if farmland trampling is enabled.",
 			},
 			IsGameModeAdventure =
 			{
@@ -3260,6 +3218,28 @@ function OnAllChunksAvailable()</pre> All return values from the callbacks are i
 					Notes = "Spawns a {{cBoat|boat}} at the specific coordinates. Returns the EntityID of the new boat, or {{cEntity#INVALID_ID|cEntity#INVALID_ID}} if no boat was created. (DEPRECATED, use vector-parametered version)",
 				},
 			},
+			SpawnEnderCrystal =
+			{
+				Params =
+				{
+					{
+						Name = "Pos",
+						Type = "Vector3d",
+					},
+					{
+						Name = "ShowBottom",
+						Type = "boolean",
+					},
+				},
+				Returns =
+				{
+					{
+						Name = "EntityID",
+						Type = "number",
+					},
+				},
+				Notes = "Spawns an {{cEnderCrystal|ender crystal}} at the specified coords. Returns the EntityID of the new ender crystal, or {{cEntity#INVALID_ID|cEntity#INVALID_ID}} if no ender crystal was created.",
+			},
 			SpawnExperienceOrb =
 			{
 				Params =
@@ -3773,77 +3753,25 @@ function OnAllChunksAvailable()</pre> All return values from the callbacks are i
 			},
 			WakeUpSimulators =
 			{
+				Params =
 				{
-					Params =
 					{
-						{
-							Name = "Block",
-							Type = "Vector3i",
-						},
+						Name = "Block",
+						Type = "Vector3i",
 					},
-					Notes = "Wakes up the simulators for the specified block.",
 				},
-				{
-					Params =
-					{
-						{
-							Name = "BlockX",
-							Type = "number",
-						},
-						{
-							Name = "BlockY",
-							Type = "number",
-						},
-						{
-							Name = "BlockZ",
-							Type = "number",
-						},
-					},
-					Notes = "Wakes up the simulators for the specified block. (DEPRECATED, use vector-parametered version)",
-				},
+				Notes = "Wakes up the simulators for the specified block.",
 			},
 			WakeUpSimulatorsInArea =
 			{
+				Params =
 				{
-					Params =
 					{
-						{
-							Name = "Area",
-							Type = "cCuboid",
-						},
+						Name = "Area",
+						Type = "cCuboid",
 					},
-					Notes = "Wakes up the simulators for all the blocks in the specified area (edges inclusive).",
 				},
-				{
-					Params =
-					{
-						{
-							Name = "MinBlockX",
-							Type = "number",
-						},
-						{
-							Name = "MaxBlockX",
-							Type = "number",
-						},
-						{
-							Name = "MinBlockY",
-							Type = "number",
-						},
-						{
-							Name = "MaxBlockY",
-							Type = "number",
-						},
-						{
-							Name = "MinBlockZ",
-							Type = "number",
-						},
-						{
-							Name = "MaxBlockZ",
-							Type = "number",
-						},
-					},
-					Notes = "Wakes up the simulators for all the blocks in the specified area (edges inclusive). (DEPRECATED, use vector-parametered version)",
-				},
+				Notes = "Wakes up the simulators for all the blocks in the specified area (edges inclusive).",
 			},
 		},
 		AdditionalInfo =

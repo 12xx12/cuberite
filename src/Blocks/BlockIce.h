@@ -18,7 +18,7 @@ public:
 
 private:
 
-	virtual cItems ConvertToPickups(NIBBLETYPE a_BlockMeta, const cEntity * a_Digger, const cItem * a_Tool) const override
+	virtual cItems ConvertToPickups(const NIBBLETYPE a_BlockMeta, const cItem * const a_Tool) const override
 	{
 		// Only drop self when using silk-touch:
 		if (ToolHasSilkTouch(a_Tool))
@@ -85,6 +85,7 @@ private:
 		const cEntity * a_Digger
 	) const override
 	{
+		UNUSED(a_Digger);
 		// If there's a solid block or a liquid underneath, convert to water, rather than air
 		if (a_BlockPos.y <= 0)
 		{
